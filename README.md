@@ -24,7 +24,7 @@ On the seeded fiber outage, the agent routes to Fiber Operations and reuses the 
 | Integrations | ServiceNow Table API shape (`/api/now/table/incident`), switchable to a real instance |
 | Frontend | Served HTML/JS desk, plus a React + TypeScript (Vite) version in `frontend/` |
 | Infra | Docker, Docker Compose, Azure Container Apps (Bicep), Render |
-| Testing | pytest covering the API, agent routing, and ServiceNow endpoints |
+| Testing | pytest for the API and ServiceNow endpoints, plus a 20-incident routing evaluation |
 
 ## Architecture
 
@@ -79,6 +79,22 @@ cd backend
 pytest
 ```
 
+## Evaluation
+
+`backend/evals/` holds 20 labeled incidents across all six teams. Each case says which team should own it. The runner scores the agent's routing against those labels, using a throwaway database so cases can't influence each other.
+
+```powershell
+cd backend
+python -m evals.run_eval
+```
+
+| Version | Routing accuracy |
+| --- | --- |
+| Initial agent | 9/20 (45%) |
+| After fixing similarity matching and keyword matching | **14/20 (70%)** |
+
+The first run showed two bugs. Any weak word overlap with a resolved ticket overrode the routing, and keywords matched inside other words ("ran" inside "transport"). Fixing both raised accuracy without adding case-specific rules. The remaining misses are incidents with vocabulary the deterministic engine doesn't know, such as "antenna" or "kubernetes". Closing that gap is the job of the Azure OpenAI path.
+
 ## Deploy
 
 - **Render:** `render.yaml` defines a free web service. Create a Blueprint from this repo.
@@ -87,7 +103,7 @@ pytest
 
 ## Roadmap
 
-- Evaluation set of labeled incidents to measure routing accuracy
+- Run the evaluation against the Azure OpenAI path and compare it with the deterministic engine
 - Azure SQL persistence and pagination
 - Authentication for the API
 - Connecting a ServiceNow developer instance
