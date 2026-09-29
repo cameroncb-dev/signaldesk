@@ -1,0 +1,247 @@
+:root {
+  color-scheme: dark;
+  --bg: #0e1210;
+  --bg-elev: #161c19;
+  --bg-soft: #1c2420;
+  --line: #2a3530;
+  --text: #e8eee9;
+  --muted: #93a199;
+  --copper: #d08a3c;
+  --copper-dim: #8a5a24;
+  --ok: #6fbf8a;
+  --warn: #e0b15a;
+  --bad: #e06a55;
+  --info: #7aa7c7;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(1200px 600px at 10% -10%, #1d2a22 0%, transparent 55%), var(--bg);
+  color: var(--text);
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(14, 18, 16, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 99px;
+  background: var(--copper);
+  box-shadow: 0 0 0 4px rgba(208, 138, 60, 0.18);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+
+.brand p,
+.meta,
+.ticket-item p,
+.muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pills {
+  display: flex;
+  gap: 8px;
+}
+
+.pill {
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.desk {
+  display: grid;
+  grid-template-columns: 340px 1fr 380px;
+  min-height: 0;
+}
+
+.queue,
+.detail,
+.agent {
+  min-height: 0;
+  overflow: auto;
+}
+
+.queue {
+  border-right: 1px solid var(--line);
+}
+
+.queue h2,
+.detail h2,
+.agent h2 {
+  margin: 0;
+  padding: 16px 18px 8px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ticket-item {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: inherit;
+  padding: 14px 18px;
+  cursor: pointer;
+}
+
+.ticket-item.active,
+.ticket-item:hover {
+  background: var(--bg-elev);
+}
+
+.ticket-item header,
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+
+.ticket-item h3,
+.detail h3 {
+  margin: 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.p1 { background: rgba(224, 106, 85, 0.18); color: #ffb1a4; }
+.p2 { background: rgba(224, 177, 90, 0.16); color: #f0cf8a; }
+.p3, .p4, .p5 { background: rgba(122, 167, 199, 0.16); color: #b7d2e6; }
+.resolved { background: rgba(111, 191, 138, 0.14); color: #9fd8b1; }
+.new { background: rgba(208, 138, 60, 0.16); color: #e2b27a; }
+.in_progress { background: rgba(122, 167, 199, 0.16); color: #b7d2e6; }
+
+.detail,
+.agent {
+  padding: 8px 22px 28px;
+}
+
+.detail {
+  border-right: 1px solid var(--line);
+}
+
+.panel {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+
+button.primary,
+button.ghost {
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+button.primary {
+  border: 1px solid var(--copper-dim);
+  background: var(--copper);
+  color: #1a1208;
+  font-weight: 650;
+}
+
+button.ghost {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+pre,
+.notes {
+  white-space: pre-wrap;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.step {
+  border-left: 2px solid var(--copper-dim);
+  padding: 0 0 14px 12px;
+  margin-left: 6px;
+}
+
+.step strong {
+  display: block;
+  font-size: 13px;
+}
+
+.error {
+  color: #ffb1a4;
+}
+
+@media (max-width: 1100px) {
+  .desk {
+    grid-template-columns: 1fr;
+  }
+}
