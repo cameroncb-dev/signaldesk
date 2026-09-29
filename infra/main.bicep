@@ -1,62 +1,53 @@
+@description('Azure region. Azure for Students subscriptions only allow a few regions.')
 param location string = resourceGroup().location
-param appName string = 'signaldesk'
 
-var containerAppName = '${appName}-api'
+@description('Globally unique web app name; becomes <name>.azurewebsites.net.')
+param appName string = 'signaldesk-${uniqueString(resourceGroup().id)}'
 
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
-  name: '${appName}-logs'
+@allowed([
+  'F1'
+  'B1'
+])
+param sku string = 'F1'
+
+resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
+  name: '${appName}-plan'
   location: location
+  kind: 'linux'
+  sku: {
+    name: sku
+  }
   properties: {
-    sku: {
-      name: 'PerGB2018'
-    }
+    reserved: true
   }
 }
 
-resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
-  name: '${appName}-env'
+resource site 'Microsoft.Web/sites@2023-12-01' = {
+  name: appName
   location: location
+  kind: 'app,linux'
   properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logAnalytics.properties.customerId
-        sharedKey: logAnalytics.listKeys().primarySharedKey
-      }
-    }
-  }
-}
-
-resource api 'Microsoft.App/containerApps@2024-03-01' = {
-  name: containerAppName
-  location: location
-  properties: {
-    managedEnvironmentId: env.id
-    configuration: {
-      ingress: {
-        external: true
-        targetPort: 8000
-      }
-    }
-    template: {
-      containers: [
+    serverFarmId: plan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'PYTHON|3.12'
+      appCommandLine: 'python -m uvicorn app.main:app --host 0.0.0.0 --port 8000'
+      alwaysOn: sku != 'F1'
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
+      appSettings: [
         {
-          name: 'api'
-          image: 'signaldesk-api:local'
-          env: [
-            {
-              name: 'DATABASE_URL'
-              value: 'sqlite:///./signaldesk.db'
-            }
-          ]
-          resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
-          }
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'true'
+        }
+        {
+          name: 'WEBSITES_PORT'
+          value: '8000'
         }
       ]
     }
   }
 }
 
-output apiFqdn string = api.properties.configuration.ingress.fqdn
+output appName string = site.name
+output url string = 'https://${site.properties.defaultHostName}'
