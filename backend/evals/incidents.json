@@ -1,0 +1,122 @@
+[
+  {
+    "short_description": "Low light levels on DFW metro ring",
+    "description": "Optical receive power dropped 6 dB on two ring nodes. Splice enclosure may be water-damaged after last night's storm.",
+    "cmdb_ci": "FS-DFW-014",
+    "expected_group": "Fiber Operations"
+  },
+  {
+    "short_description": "Backhoe dig-in reported near Houston splice point",
+    "description": "Field tech reports a construction crew hit buried conduit. Multiple enterprise circuits down in Houston east.",
+    "cmdb_ci": "",
+    "expected_group": "Fiber Operations"
+  },
+  {
+    "short_description": "Wave down on Dallas-Miami long-haul",
+    "description": "100G wave alarming LOS since 04:10. Protection switch did not trigger.",
+    "cmdb_ci": "LH-DAL-MIA",
+    "expected_group": "Fiber Operations"
+  },
+  {
+    "short_description": "Rodent damage suspected on aerial cable in Tampa",
+    "description": "Intermittent loss on aerial cable between two poles. Chew marks were found on the last patrol.",
+    "cmdb_ci": "",
+    "expected_group": "Fiber Operations"
+  },
+  {
+    "short_description": "Dropped calls at Atlanta downtown site",
+    "description": "VoLTE drop rate at 3.4%. Radio alarms on sector 2.",
+    "cmdb_ci": "CS-ATL-221",
+    "expected_group": "Wireless RAN"
+  },
+  {
+    "short_description": "Tower on generator after storm in rural Oklahoma",
+    "description": "Cell tower lost commercial power and is running on generator with fuel at 20%. Coverage will drop if the generator fails.",
+    "cmdb_ci": "",
+    "expected_group": "Wireless RAN"
+  },
+  {
+    "short_description": "5G standalone attach failures in Phoenix",
+    "description": "Subscribers cannot attach to 5G SA and are falling back to LTE across the metro.",
+    "cmdb_ci": "",
+    "expected_group": "Wireless RAN"
+  },
+  {
+    "short_description": "Antenna tilt misconfigured after site upgrade",
+    "description": "Coverage complaints near the stadium after a remote electrical tilt change on three sectors.",
+    "cmdb_ci": "",
+    "expected_group": "Wireless RAN"
+  },
+  {
+    "short_description": "BGP session down with IX peering partner",
+    "description": "eBGP session to the IX peer has been idle since maintenance. About 12k prefixes withdrawn.",
+    "cmdb_ci": "CR-CHI-01",
+    "expected_group": "Core Network"
+  },
+  {
+    "short_description": "SIP trunk failures for enterprise voice customers",
+    "description": "Inbound calls failing with 503 responses on SIP trunks in the Atlanta region.",
+    "cmdb_ci": "",
+    "expected_group": "Core Network"
+  },
+  {
+    "short_description": "Packet loss on backbone between Denver and Kansas City",
+    "description": "MPLS LSPs rerouting repeatedly. Latency up 40 ms on the backbone path.",
+    "cmdb_ci": "",
+    "expected_group": "Core Network"
+  },
+  {
+    "short_description": "Invoice generation timing out",
+    "description": "Monthly invoice batch jobs failing with timeouts since this morning.",
+    "cmdb_ci": "API-BILL-PROD",
+    "expected_group": "Digital Experience"
+  },
+  {
+    "short_description": "Mobile app login errors after release",
+    "description": "Customers see 'something went wrong' when logging into the myAccount app after version 8.2.",
+    "cmdb_ci": "",
+    "expected_group": "Digital Experience"
+  },
+  {
+    "short_description": "Payment page returning 502 errors",
+    "description": "Checkout on the website returns 502 intermittently. The payment provider status page shows healthy.",
+    "cmdb_ci": "",
+    "expected_group": "Digital Experience"
+  },
+  {
+    "short_description": "HR onboarding cases not syncing",
+    "description": "New hire cases are stuck in the queue. Integration logs show authentication failures.",
+    "cmdb_ci": "INT-SNOW-HR",
+    "expected_group": "IT Service Management"
+  },
+  {
+    "short_description": "ServiceNow approval workflow stuck",
+    "description": "Change requests are stuck at the approval step since the last workflow update.",
+    "cmdb_ci": "",
+    "expected_group": "IT Service Management"
+  },
+  {
+    "short_description": "CMDB discovery missing new servers",
+    "description": "The discovery job completed but 40 new servers were not added to the CMDB.",
+    "cmdb_ci": "",
+    "expected_group": "IT Service Management"
+  },
+  {
+    "short_description": "Azure AD sign-in failures for employees",
+    "description": "Staff cannot sign into internal apps. A conditional access policy was changed yesterday.",
+    "cmdb_ci": "",
+    "expected_group": "Cloud Platform"
+  },
+  {
+    "short_description": "Kubernetes nodes not ready in East US",
+    "description": "AKS node pool shows NotReady after an OS upgrade. Pods are stuck pending.",
+    "cmdb_ci": "",
+    "expected_group": "Cloud Platform"
+  },
+  {
+    "short_description": "Subscription quota reached in landing zone",
+    "description": "Deployments failing because the vCPU quota is exceeded in the landing zone subscription.",
+    "cmdb_ci": "",
+    "expected_group": "Cloud Platform"
+  }
+]
