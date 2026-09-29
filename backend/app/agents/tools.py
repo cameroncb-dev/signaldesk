@@ -11,8 +11,19 @@ from app.models import Asset, Ticket
 from app.seed import ASSIGNMENT_GROUPS
 
 
+STOPWORDS = {
+    "the", "and", "for", "are", "was", "were", "has", "have", "had", "with", "from", "into",
+    "after", "before", "since", "this", "that", "these", "those", "not", "but", "can", "cannot",
+    "our", "their", "its", "all", "any", "last", "new", "now", "near", "about", "across",
+    "failing", "failure", "failures", "error", "errors", "issue", "issues", "down", "need",
+    "resolved", "historical", "incident", "customers", "users", "reported", "reports",
+}
+
+
 def _tokens(text: str) -> set[str]:
-    return {t for t in re.findall(r"[a-z0-9]+", text.lower()) if len(t) > 2}
+    return {
+        t for t in re.findall(r"[a-z0-9]+", text.lower()) if len(t) > 2 and t not in STOPWORDS
+    }
 
 
 class AgentToolbox:

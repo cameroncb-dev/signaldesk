@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 
 from sqlalchemy.orm import Session
 
@@ -12,13 +13,20 @@ from app.schemas import AgentRunOut, AgentStep, Recommendation
 
 
 KEYWORD_ROUTES = (
-    (("fiber", "otdr", "span", "splice", "optical", "dwm"), "Fiber Operations", "network", "optical"),
+    (("fiber", "otdr", "span", "splice", "optical", "dwdm"), "Fiber Operations", "network", "optical"),
     (("5g", "cell", "ran", "prb", "midband", "radio"), "Wireless RAN", "wireless", "capacity"),
     (("bgp", "router", "peering", "sip", "prefix"), "Core Network", "network", "routing"),
     (("api", "billing", "deploy", "apim", "5xx", "504"), "Digital Experience", "application", "regression"),
     (("servicenow", "table api", "cert", "itsm", "integration"), "IT Service Management", "integration", "auth"),
     (("azure", "landing", "identity"), "Cloud Platform", "application", "platform"),
 )
+
+# A past incident only decides routing when it is a close match, e.g. same CI plus shared symptoms.
+SIMILARITY_OVERRIDE_THRESHOLD = 0.3
+
+
+def _mentions(blob: str, keyword: str) -> bool:
+    return re.search(rf"\b{re.escape(keyword)}\b", blob) is not None
 
 
 def _priority(urgency: int, impact: int) -> int:
@@ -29,7 +37,7 @@ def _heuristic(ticket: dict, asset: dict | None, similar: list[dict]) -> Recomme
     blob = f"{ticket.get('short_description', '')} {ticket.get('description', '')}".lower()
     group, category, subcategory = "IT Service Management", "inquiry", "general"
     for keywords, routed_group, routed_category, routed_sub in KEYWORD_ROUTES:
-        if any(keyword in blob for keyword in keywords):
+        if any(_mentions(blob, keyword) for keyword in keywords):
             group, category, subcategory = routed_group, routed_category, routed_sub
             break
 
@@ -40,7 +48,11 @@ def _heuristic(ticket: dict, asset: dict | None, similar: list[dict]) -> Recomme
         elif asset.get("kind") == "cell_site":
             category, subcategory = "wireless", "ran"
 
-    resolved = [row for row in similar if row.get("state") == "resolved"]
+    resolved = [
+        row
+        for row in similar
+        if row.get("state") == "resolved" and row.get("score", 0) >= SIMILARITY_OVERRIDE_THRESHOLD
+    ]
     if resolved and resolved[0].get("assignment_group"):
         group = resolved[0]["assignment_group"]
 
@@ -53,9 +65,9 @@ def _heuristic(ticket: dict, asset: dict | None, similar: list[dict]) -> Recomme
     if resolved:
         note = resolved[0].get("close_notes") or resolved[0].get("short_description")
         actions.append(f"Reuse close path from {resolved[0]['number']}: {note}")
-    elif "fiber" in blob or "otdr" in blob:
+    elif _mentions(blob, "fiber") or _mentions(blob, "otdr"):
         actions.append("Request field dispatch and a fresh OTDR trace at the loss marker.")
-    elif "api" in blob:
+    elif _mentions(blob, "api"):
         actions.append("Compare error budget vs. last good deploy and decide rollback vs. hotfix.")
     else:
         actions.append("Collect last-change and monitoring evidence before expanding the bridge.")
