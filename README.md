@@ -4,7 +4,7 @@ An incident desk for network and IT operations. An AI agent reads a ticket, look
 
 ![SignalDesk triaging a fiber outage](docs/screenshot.png)
 
-**Live demo:** [signaldesk-adk6.onrender.com](https://signaldesk-adk6.onrender.com) (free hosting, so the first load can take up to a minute while it wakes up)
+**Live demo:** [signaldesk-sbaie3hfbdaes.azurewebsites.net](https://signaldesk-sbaie3hfbdaes.azurewebsites.net) on Azure App Service. Backup: [signaldesk-adk6.onrender.com](https://signaldesk-adk6.onrender.com) (free tier, first load can take up to a minute).
 
 ## What it does
 
@@ -23,7 +23,7 @@ On the seeded fiber outage, the agent routes to Fiber Operations and reuses the 
 | Agent | Tool-calling orchestrator with Azure OpenAI synthesis and a deterministic fallback |
 | Integrations | ServiceNow Table API shape (`/api/now/table/incident`), switchable to a real instance |
 | Frontend | Served HTML/JS desk, plus a React + TypeScript (Vite) version in `frontend/` |
-| Infra | Docker, Docker Compose, Azure Container Apps (Bicep), Render |
+| Infra | Azure App Service provisioned with Bicep, Render, Docker Compose for local use |
 | Testing | pytest for the API and ServiceNow endpoints, plus a 20-incident routing evaluation |
 
 ## Architecture
@@ -97,9 +97,15 @@ The first run showed two bugs. Any weak word overlap with a resolved ticket over
 
 ## Deploy
 
+- **Azure (primary):** `infra/main.bicep` provisions a Linux App Service plan and web app running Python 3.12. `infra/deploy.ps1` creates the resource group, applies the Bicep template, packages the backend, and deploys it in one command:
+
+  ```powershell
+  az login
+  .\infra\deploy.ps1 -Location northcentralus -Sku B1
+  ```
+
 - **Render:** `render.yaml` defines a free web service. Create a Blueprint from this repo.
 - **Docker:** `docker compose up --build` runs the API and the React frontend.
-- **Azure:** `infra/main.bicep` provisions Azure Container Apps with Log Analytics.
 
 ## Roadmap
 
