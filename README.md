@@ -4,7 +4,7 @@ An incident desk for network and IT operations. An AI agent reads a ticket, look
 
 ![SignalDesk triaging a fiber outage](docs/screenshot.png)
 
-**Live demo:** _coming soon_
+**Live demo:** [signaldesk-adk6.onrender.com](https://signaldesk-adk6.onrender.com) (free hosting, so the first load can take up to a minute while it wakes up)
 
 ## What it does
 
